@@ -32,7 +32,6 @@ fun RegistroScreen(navController: NavController, viewModel: AuthViewModel) {
         color = colorPrimario,
         contentColor = Color.White
     ) {
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
