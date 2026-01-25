@@ -63,8 +63,8 @@ fun CarritoScreen(
         },
         bottomBar = {
             Surface(
-                color = colorSecundario,     // 👈 color del fondo
-                tonalElevation = 8.dp      // sombra / separación
+                color = colorSecundario,
+                tonalElevation = 8.dp
             ) {
                 Row(
                     modifier = Modifier

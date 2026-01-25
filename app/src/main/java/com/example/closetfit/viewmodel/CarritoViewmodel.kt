@@ -40,11 +40,11 @@ class CarritoViewmodel : ViewModel() {
             current.filterNot { it.id == id }
         }
     }
-    fun agregarSiNoExiste(videojuego: Carrito) {
+    fun agregarSiNoExiste(producto: Carrito) {
         _carrito.update { current ->
-            val existe = current.any { it.id == videojuego.id }
+            val existe = current.any { it.id == producto.id }
             if (!existe) {
-                current + videojuego.copy(cantidad = 1)
+                current + producto.copy(cantidad = 1)
             } else {
                 current
             }

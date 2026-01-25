@@ -10,10 +10,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.closetfit.ui.theme.ClosetFitTheme
 import com.example.closetfit.view.CarritoScreen
+import com.example.closetfit.view.CompraExitosaScreen
+import com.example.closetfit.view.CompraRechazadaScreen
 import com.example.closetfit.view.LoginScreen
 import com.example.closetfit.view.RegistroScreen
 import com.example.closetfit.view.UsuarioBackoficceScreen
 import com.example.closetfit.viewmodel.CarritoViewmodel
+import com.example.closetfit.viewmodel.CompraExitosaViewModel
+import com.example.closetfit.viewmodel.CompraRechazadaViewModel
 import com.example.closetfit.viewmodel.UsuarioViewModel
 
 class MainActivity : ComponentActivity() {
@@ -25,9 +29,11 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val usuarioViewModel: UsuarioViewModel = viewModel()
                 val carritoViewmodel: CarritoViewmodel = viewModel()
+                val compraExitosaViewModel: CompraExitosaViewModel = viewModel()
+                val compraRechazadaViewModel: CompraRechazadaViewModel = viewModel()
                 NavHost(
                     navController = navController,
-                    startDestination = "carrito"
+                    startDestination = "compra_exitosa"
                 ) {
                     composable("registro") {
                         RegistroScreen(
@@ -47,7 +53,20 @@ class MainActivity : ComponentActivity() {
                     composable("carrito") {
                         CarritoScreen(
                             navController = navController,
-                            carritoViewmodel = carritoViewmodel
+                            carritoViewmodel = carritoViewmodel,
+                            compraExitosaViewModel = compraExitosaViewModel
+                        )
+                    }
+                    composable("compra_exitosa") {
+                        CompraExitosaScreen(
+                            navController = navController,
+                            viewModel = compraExitosaViewModel
+                        )
+                    }
+                    composable("compra_rechazada") {
+                        CompraRechazadaScreen(
+                            navController = navController,
+                            viewModel = compraRechazadaViewModel
                         )
                     }
                 }
