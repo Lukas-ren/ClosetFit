@@ -9,9 +9,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.closetfit.ui.theme.ClosetFitTheme
+import com.example.closetfit.view.CarritoScreen
 import com.example.closetfit.view.LoginScreen
 import com.example.closetfit.view.RegistroScreen
 import com.example.closetfit.view.UsuarioBackoficceScreen
+import com.example.closetfit.viewmodel.CarritoViewmodel
 import com.example.closetfit.viewmodel.UsuarioViewModel
 
 class MainActivity : ComponentActivity() {
@@ -22,9 +24,10 @@ class MainActivity : ComponentActivity() {
             ClosetFitTheme {
                 val navController = rememberNavController()
                 val usuarioViewModel: UsuarioViewModel = viewModel()
+                val carritoViewmodel: CarritoViewmodel = viewModel()
                 NavHost(
                     navController = navController,
-                    startDestination = "registro"
+                    startDestination = "carrito"
                 ) {
                     composable("registro") {
                         RegistroScreen(
@@ -40,6 +43,12 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("usuario_backoffice") {
                         UsuarioBackoficceScreen(viewModel = usuarioViewModel)
+                    }
+                    composable("carrito") {
+                        CarritoScreen(
+                            navController = navController,
+                            carritoViewmodel = carritoViewmodel
+                        )
                     }
                 }
             }

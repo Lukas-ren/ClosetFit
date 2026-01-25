@@ -12,6 +12,6 @@ val Pink40 = Color(0xFF7D5260)
 
 val colorPrimario = Color(0xFFAA5042)
 
-val colorSecundario = Color(0xFFD8D78F)
+val colorSecundario = Color(0xFF753742)
 
-val colorBoton = Color(0xFF753742)
+val colorBoton = Color(0xFF4F3130)
