@@ -90,7 +90,7 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
                 }
             }
         }, colors = ButtonDefaults.buttonColors(containerColor = colorBoton)) {
-            Text("Iniciar sesión")
+            Text("Iniciar sesió")
         }
 
         Text(viewModel.mensaje.value, modifier = Modifier.padding(top = 10.dp), color = Color.White)
