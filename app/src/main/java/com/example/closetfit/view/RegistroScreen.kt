@@ -3,6 +3,8 @@ package com.example.closetfit.view
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material3.*
+import androidx.compose.material3.AlertDialogDefaults.containerColor
+import androidx.compose.material3.ListItemDefaults.contentColor
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -10,6 +12,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.wear.compose.material3.Button
+import androidx.wear.compose.material3.ButtonDefaults
+import com.example.closetfit.ui.theme.colorBoton
 import com.example.closetfit.ui.theme.colorPrimario
 import com.example.closetfit.viewmodel.AuthViewModel
 
@@ -123,16 +128,18 @@ fun RegistroScreen(navController: NavController, viewModel: AuthViewModel) {
                 )
             )
 
-            Spacer(modifier = Modifier.height(20.dp)) // Un poco más de espacio antes del botón
+            Spacer(modifier = Modifier.height(20.dp))
 
-            Button(onClick = { viewModel.registrar(nombre, email, password, run, direccion) }) {
+            Button(onClick = { viewModel.registrar(nombre, email, password, confirmPassword, run, direccion) },
+                colors = ButtonDefaults.buttonColors(containerColor = colorBoton)) {
                 Text("Registrar")
             }
+
 
             Text(viewModel.mensaje.value, modifier = Modifier.padding(top = 10.dp))
 
             TextButton(onClick = { navController.navigate("login") }) {
-                Text("¿Ya tienes cuenta? Inicia sesión",
+                Text("¿Ya tienes cuenta? Inicia sesión aquí.",
                     color = Color(0xFFFFFFFF))
             }
         }

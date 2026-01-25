@@ -8,8 +8,8 @@ import com.example.closetfit.model.Usuario
 class AuthViewModel : ViewModel() {
     var mensaje = mutableStateOf("")
     var usuarioActual = mutableStateOf<String?>(null)
-    fun registrar(nombre: String, email: String, password: String, run: String, direccion: String) {
-        if (nombre.isBlank() || email.isBlank() || password.isBlank() || run.isBlank() || direccion.isBlank()) {
+    fun registrar(nombre: String, email: String, password: String, confirmpassword: String, run: String, direccion: String) {
+        if (nombre.isBlank() || email.isBlank() || password.isBlank() || confirmpassword.isBlank() || run.isBlank() || direccion.isBlank()) {
             mensaje.value = "Todos los campos son obligatorios"
             return
         }
@@ -19,6 +19,10 @@ class AuthViewModel : ViewModel() {
         }
         if (password.length < 4 ) {
             mensaje.value = "La contraseña debe tener mínimo 4 carácteres"
+            return
+        }
+        if(password != confirmpassword){
+            mensaje.value = "Las contraseñas no coinciden ❌"
             return
         }
         val nuevo = Usuario(nombre,email,password)

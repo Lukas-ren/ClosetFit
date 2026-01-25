@@ -16,6 +16,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.closetfit.ui.theme.ClosetFitTheme
+import com.example.closetfit.view.LoginScreen
 import com.example.closetfit.viewmodel.AuthViewModel
 import com.example.closetfit.view.RegistroScreen
 
@@ -33,6 +34,12 @@ class MainActivity : ComponentActivity() {
                 ) {
                     composable("registro") {
                         RegistroScreen(
+                            navController = navController,
+                            viewModel = authViewModel
+                        )
+                    }
+                    composable("login") {
+                        LoginScreen(
                             navController = navController,
                             viewModel = authViewModel
                         )

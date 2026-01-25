@@ -11,3 +11,4 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val colorPrimario = Color(0xFFAA5042)
+val colorBoton = Color(0xFF753742)
