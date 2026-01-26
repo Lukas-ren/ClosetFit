@@ -5,7 +5,7 @@
     "categoria": "Poleras",
     "talla": "M",
     "precio": 15000,
-    "imagen": "polera_negra",
+    "imagen": "https://tottoco.vtexassets.com/arquivos/ids/606756/RA46698-2510-N01L_7.jpg?v=638827689366070000",
     "stock": 50
   },
   {
@@ -13,7 +13,7 @@
     "categoria": "Pantalones",
     "talla": "42",
     "precio": 30000,
-    "imagen": "pantalon_jean",
+    "imagen": "https://img.freepik.com/foto-gratis/pantalones-vaqueros_1203-8093.jpg?semt=ais_hybrid&w=740&q=80",
     "stock": 30
   },
   {
@@ -21,7 +21,7 @@
     "categoria": "Shorts",
     "talla": "L",
     "precio": 12000,
-    "imagen": "shorts_deportivos",
+    "imagen": "https://bisonte.cl/wp-content/uploads/2024/03/GORRA-DE-COMBATE-10.png",
     "stock": 40
   },
   {
@@ -29,7 +29,7 @@
     "categoria": "Poleras",
     "talla": "L",
     "precio": 18000,
-    "imagen": "polera_gris",
+    "imagen": "https://www.gustore.cl/img/estampados/7578/7578_1.png",
     "stock": 25
   },
   {
@@ -37,7 +37,7 @@
     "categoria": "Pantalones",
     "talla": "44",
     "precio": 35000,
-    "imagen": "pantalon_cargo",
+    "imagen": "https://e7.pngegg.com/pngimages/345/142/png-clipart-t-shirt-cargo-pants-hoodie-craghoppers-beige-trousers-cargo-kids.png",
     "stock": 20
   }
 ]
