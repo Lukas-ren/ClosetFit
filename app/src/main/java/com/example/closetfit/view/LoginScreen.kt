@@ -42,7 +42,6 @@ fun LoginScreen(navController: NavController, viewModel: UsuarioViewModel) {
             if (username == "admin") { // Hardcoded admin credentials
                 navController.navigate("usuario_backoffice")
             } else {
-                // navController.navigate("catalogo") // Navigate to catalog for regular users
             }
         }
     }

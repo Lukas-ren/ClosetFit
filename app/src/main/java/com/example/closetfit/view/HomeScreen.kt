@@ -2,6 +2,7 @@ package com.example.closetfit.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,7 +19,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.example.closetfit.model.Producto
 import com.example.closetfit.ui.theme.ClosetFitTheme
 import com.example.closetfit.ui.theme.colorPrimario
@@ -35,9 +36,17 @@ import com.example.closetfit.viewmodel.ProductoViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, productoViewModel: ProductoViewModel = viewModel()) {
-    val products by productoViewModel.allProducts.collectAsState(initial = emptyList())
+fun HomeScreen(
+    navController: NavController,
+    productoViewModel: ProductoViewModel = viewModel()
+) {
+    val context = LocalContext.current
 
+    val productos by productoViewModel.allProductos.collectAsState(initial = emptyList())
+
+    LaunchedEffect(Unit) {
+        productoViewModel.cargarProductos(context)
+    }
     Scaffold(
         bottomBar = { BottomNavigationBar(navController) },
         containerColor = colorPrimario
@@ -47,14 +56,16 @@ fun HomeScreen(navController: NavController, productoViewModel: ProductoViewMode
                 .fillMaxSize()
                 .padding(it)
                 .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp) // Adjusted spacing for a single column
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item { Spacer(modifier = Modifier.height(16.dp)) }
             item { TopSection(navController) }
             item { CategoriesSection() }
 
-            items(products) { product ->
-                ProductCard(product)
+            items(productos) { producto ->
+                ProductoCard(producto = producto, onClick = {
+                    navController.navigate("detalle_producto/${producto.id}")
+                })
             }
 
             item { Spacer(modifier = Modifier.height(16.dp)) }
@@ -82,7 +93,7 @@ fun TopSection(navController: NavController) {
         )
         Spacer(modifier = Modifier.width(8.dp))
         TextButton(onClick = { navController.navigate("perfil") }) {
-            Icon(Icons.Default.Person, contentDescription = "Perfil", tint = Color(0xFF6A1B9A))
+            Icon(Icons.Default.Person, contentDescription = "Perfil", tint = Color(0xFFD8D78F))
             Spacer(modifier = Modifier.width(4.dp))
             Text("Mi perfil", color = Color.Black)
         }
@@ -135,44 +146,27 @@ fun CategoryItem(icon: ImageVector, text: String) {
 }
 
 @Composable
-fun ProductCard(product: Producto) {
-    val context = LocalContext.current
-    val resourceId = context.resources.getIdentifier(product.imagen, "drawable", context.packageName)
+fun ProductoCard(producto: Producto, onClick: () -> Unit) {
+    Card(modifier = Modifier
+        .fillMaxWidth()
 
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        .clickable { onClick() }
+        .padding(4.dp),
+        shape = RoundedCornerShape(8.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = colorSecundario,
+            contentColor = Color.White
+        )
     ) {
-        Column {
-            if (resourceId != 0) {
-                Image(
-                    painter = painterResource(id = resourceId),
-                    contentDescription = "Product image",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(180.dp),
-                    contentScale = ContentScale.Crop
-                )
-            } else {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(180.dp)
-                        .background(Color.LightGray.copy(alpha = 0.5f)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(Icons.Default.PhotoSizeSelectActual, contentDescription = "Product image", tint = Color.Gray, modifier = Modifier.size(80.dp))
-                }
-            }
-
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(text = product.nombre, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(text = "$${product.precio}", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(text = "Stock: ${product.stock}", fontSize = 14.sp, color = Color.Gray)
+        Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
+            val painter = rememberAsyncImagePainter(producto.imagen)
+            Image(painter = painter, contentDescription = producto.nombre, modifier = Modifier.size(80.dp), contentScale = ContentScale.Crop)
+            Spacer(modifier = Modifier.width(12.dp))
+            Column(Modifier.weight(1f)) {
+                Text(text = producto.nombre, style = MaterialTheme.typography.titleMedium)
+                Text(text = "Talla: ${producto.talla}", style = MaterialTheme.typography.bodyMedium)
+                Text(text = "$${producto.precio}", style = MaterialTheme.typography.bodyMedium)
             }
         }
     }
@@ -191,7 +185,7 @@ fun BottomNavigationBar(navController: NavController) {
             selected = true,
             onClick = { navController.navigate("carrito") },
             icon = {
-                BadgedBox(badge = { Badge { Text("1") } }) {
+                BadgedBox(badge = { Badge { Text("") } }) {
                     Icon(Icons.Default.ShoppingCart, contentDescription = "Cart")
                 }
             }
