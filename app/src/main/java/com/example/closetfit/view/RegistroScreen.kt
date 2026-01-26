@@ -158,7 +158,7 @@ fun RegistroScreen(navController: NavController, viewModel: UsuarioViewModel) {
 
             Text(mensaje, modifier = Modifier.padding(top = 10.dp))
 
-            TextButton(onClick = { navController.navigate("inicio") }) {
+            TextButton(onClick = { navController.navigate("home") }) {
                 Text("¿Ya tienes cuenta? Inicia sesión aquí.",
                     color = Color(0xFFFFFFFF))
             }
