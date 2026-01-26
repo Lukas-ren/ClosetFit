@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,8 +28,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.closetfit.R
 import coil.compose.rememberAsyncImagePainter
+import com.example.closetfit.R
 import com.example.closetfit.model.Producto
 import com.example.closetfit.ui.theme.ClosetFitTheme
 import com.example.closetfit.ui.theme.colorPrimario
@@ -46,7 +47,7 @@ fun HomeScreen(
     val productos by productoViewModel.allProductos.collectAsState(initial = emptyList())
 
     LaunchedEffect(Unit) {
-        productoViewModel.cargarProductos(context)
+        // productoViewModel.cargarProductos(context) // This is not needed anymore
     }
     Scaffold(
         bottomBar = { BottomNavigationBar(navController) },
@@ -64,9 +65,7 @@ fun HomeScreen(
             item { CategoriesSection() }
 
             items(productos) { producto ->
-                ProductoCard(producto = producto, onClick = {
-                    navController.navigate("detalle_producto/${producto.id}")
-                })
+                ProductoCard(producto = producto, onClick = {})
             }
 
             item { Spacer(modifier = Modifier.height(16.dp)) }
@@ -153,9 +152,11 @@ fun CategoryItem(@DrawableRes imageRes: Int, text: String) {
 
 @Composable
 fun ProductoCard(producto: Producto, onClick: () -> Unit) {
+    val context = LocalContext.current
+    val resourceId = context.resources.getIdentifier(producto.imagen, "drawable", context.packageName)
+
     Card(modifier = Modifier
         .fillMaxWidth()
-
         .clickable { onClick() }
         .padding(4.dp),
         shape = RoundedCornerShape(8.dp),
@@ -166,8 +167,12 @@ fun ProductoCard(producto: Producto, onClick: () -> Unit) {
         )
     ) {
         Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
-            val painter = rememberAsyncImagePainter(producto.imagen)
-            Image(painter = painter, contentDescription = producto.nombre, modifier = Modifier.size(80.dp), contentScale = ContentScale.Crop)
+            Image(
+                painter = rememberAsyncImagePainter(model = resourceId),
+                contentDescription = producto.nombre,
+                modifier = Modifier.size(80.dp),
+                contentScale = ContentScale.Crop
+            )
             Spacer(modifier = Modifier.width(12.dp))
             Column(Modifier.weight(1f)) {
                 Text(text = producto.nombre, style = MaterialTheme.typography.titleMedium)

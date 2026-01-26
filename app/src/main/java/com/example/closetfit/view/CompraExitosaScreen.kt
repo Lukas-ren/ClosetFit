@@ -54,14 +54,14 @@ fun CompraExitosaScreen(navController: NavController, viewModel: CompraExitosaVi
         when {
             navegarInicio -> {
                 viewModel.navegacionCompletada()
-                navController.navigate("inicio") {
+                navController.navigate("home") {
                     popUpTo("carrito") { inclusive = true }
                 }
             }
 
             navegarTienda -> {
                 viewModel.navegacionCompletada()
-                navController.navigate("catalogo") {
+                navController.navigate("home") {
                     popUpTo("carrito") { inclusive = true }
                 }
             }
