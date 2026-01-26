@@ -1,6 +1,7 @@
 package com.example.closetfit.view
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,22 +10,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.closetfit.model.Usuario
 import com.example.closetfit.ui.theme.colorPrimario
 import com.example.closetfit.ui.theme.colorSecundario
@@ -32,23 +28,53 @@ import com.example.closetfit.viewmodel.UsuarioViewModel
 
 // Stateful Composable
 @Composable
-fun UsuarioBackoficceScreen(viewModel: UsuarioViewModel) {
+fun UsuarioBackoficceScreen(navController: NavController, viewModel: UsuarioViewModel) {
     val usuarios by viewModel.usuarios.collectAsState(initial = emptyList())
-    UsuarioBackoficceScreenContent(usuarios = usuarios)
+    UsuarioBackoficceScreenContent(navController = navController, usuarios = usuarios)
 }
 
 // Stateless Composable (for UI and Previews)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UsuarioBackoficceScreenContent(usuarios: List<Usuario>) {
+fun UsuarioBackoficceScreenContent(navController: NavController, usuarios: List<Usuario>) {
+    var menuExpanded by remember { mutableStateOf(false) }
+
     Scaffold(
         containerColor = colorPrimario,
         topBar = {
             TopAppBar(
                 title = { Text("ClosetFit \nBackoffice de administrador") },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = colorSecundario
-                )
+                    containerColor = colorSecundario,
+                    titleContentColor = Color.White,
+                    actionIconContentColor = Color.White
+                ),
+                actions = {
+                    Box {
+                        IconButton(onClick = { menuExpanded = true }) {
+                            Icon(Icons.Default.MoreVert, contentDescription = "Menú")
+                        }
+                        DropdownMenu(
+                            expanded = menuExpanded,
+                            onDismissRequest = { menuExpanded = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text("Volver al home") },
+                                onClick = {
+                                    navController.navigate("home")
+                                    menuExpanded = false
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Cerrar sesión") },
+                                onClick = {
+                                    navController.navigate("login") { popUpTo(0) }
+                                    menuExpanded = false
+                                }
+                            )
+                        }
+                    }
+                }
             )
         },
         bottomBar = {
@@ -94,7 +120,6 @@ fun UserItem(usuario: Usuario) {
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun UsuarioBackoficceScreenPreview() {
@@ -102,7 +127,7 @@ fun UsuarioBackoficceScreenPreview() {
         Usuario(nombre = "Admin", email = "admin@admin.com", password = "admin", run = "11.111.111-1", direccion = "Dirección 123"),
         Usuario(nombre = "TestUser", email = "test@user.com", password = "123", run = "22.222.222-2", direccion = "Avenida 456")
     )
-    UsuarioBackoficceScreenContent(usuarios = fakeUsers)
+    UsuarioBackoficceScreenContent(navController = rememberNavController(), usuarios = fakeUsers)
 }
 
 @Preview(showBackground = true)

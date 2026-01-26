@@ -2,7 +2,6 @@ package com.example.closetfit.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -29,7 +28,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,15 +43,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.closetfit.R
+import com.example.closetfit.model.Usuario
 import com.example.closetfit.ui.theme.ClosetFitTheme
 import com.example.closetfit.ui.theme.colorPrimario
+import com.example.closetfit.ui.theme.colorSecundario
+import com.example.closetfit.viewmodel.UsuarioViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PerfilScreen(navController: NavController) {
+fun PerfilScreen(navController: NavController, viewModel: UsuarioViewModel = viewModel()) {
+    val currentUser by viewModel.currentUser.collectAsState()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -63,7 +71,13 @@ fun PerfilScreen(navController: NavController) {
                     IconButton(onClick = { /* TODO: Editar perfil */ }) {
                         Icon(Icons.Default.Edit, contentDescription = "Editar")
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = colorSecundario,
+                    titleContentColor = Color.White,
+                    navigationIconContentColor = Color.White,
+                    actionIconContentColor = Color.White
+                )
             )
         },
         containerColor = colorPrimario
@@ -85,14 +99,15 @@ fun PerfilScreen(navController: NavController) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Nombre de Usuario",
+                text = currentUser?.nombre ?: "Nombre de Usuario",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(24.dp))
-            ProfileInfoCard()
+            ProfileInfoCard(currentUser)
             Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = {
+                viewModel.logout()
                 navController.navigate("login") {
                     popUpTo(0)
                 }
@@ -104,17 +119,17 @@ fun PerfilScreen(navController: NavController) {
 }
 
 @Composable
-fun ProfileInfoCard() {
+fun ProfileInfoCard(user: Usuario?) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            ProfileInfoRow(icon = Icons.Default.Person, text = "user_name_example")
+            ProfileInfoRow(icon = Icons.Default.Person, text = user?.nombre ?: "user_name_example")
             Spacer(modifier = Modifier.height(16.dp))
-            ProfileInfoRow(icon = Icons.Default.Email, text = "email@example.com")
+            ProfileInfoRow(icon = Icons.Default.Email, text = user?.email ?: "email@example.com")
             Spacer(modifier = Modifier.height(16.dp))
-            ProfileInfoRow(icon = Icons.Default.LocationOn, text = "Dirección de ejemplo, 123")
+            ProfileInfoRow(icon = Icons.Default.LocationOn, text = user?.direccion ?: "Dirección de ejemplo, 123")
         }
     }
 }

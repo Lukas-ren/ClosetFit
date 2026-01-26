@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
                         CarritoScreen(navController = navController)
                     }
                     composable("perfil") { 
-                        PerfilScreen(navController = navController)
+                        PerfilScreen(navController = navController, viewModel = usuarioViewModel)
                     }
                     composable("registro") {
                         RegistroScreen(
@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable("usuario_backoffice") {
-                        UsuarioBackoficceScreen(viewModel = usuarioViewModel)
+                        UsuarioBackoficceScreen(navController = navController, viewModel = usuarioViewModel)
                     }
                 }
             }

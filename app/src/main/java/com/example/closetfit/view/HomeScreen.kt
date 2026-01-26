@@ -1,5 +1,6 @@
 package com.example.closetfit.view
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.closetfit.R
 import com.example.closetfit.model.Producto
 import com.example.closetfit.ui.theme.ClosetFitTheme
 import com.example.closetfit.ui.theme.colorPrimario
@@ -78,7 +79,12 @@ fun TopSection(navController: NavController) {
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = Color.Gray) },
             modifier = Modifier.weight(1f),
             shape = RoundedCornerShape(8.dp),
-            colors = TextFieldDefaults.colors(colorSecundario)
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = colorSecundario.copy(alpha = 0.5f),
+                unfocusedContainerColor = colorSecundario.copy(alpha = 0.5f),
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            )
         )
         Spacer(modifier = Modifier.width(8.dp))
         TextButton(onClick = { navController.navigate("perfil") }) {
@@ -110,27 +116,27 @@ fun CategoriesSection() {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-            CategoryItem(icon = Icons.Default.Style, text = "Poleras")
-            CategoryItem(icon = Icons.Default.Style, text = "Pantalones")
-            CategoryItem(icon = Icons.Default.Style, text = "Shorts")
+            CategoryItem(imageRes = R.drawable.polera_negra, text = "Poleras")
+            CategoryItem(imageRes = R.drawable.pantalon_jean, text = "Pantalones")
+            CategoryItem(imageRes = R.drawable.shorts_deportivos, text = "Shorts")
         }
     }
 }
 
 @Composable
-fun CategoryItem(icon: ImageVector, text: String) {
+fun CategoryItem(@DrawableRes imageRes: Int, text: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Box(
+        Image(
+            painter = painterResource(id = imageRes),
+            contentDescription = text,
             modifier = Modifier
                 .size(60.dp)
                 .clip(CircleShape)
                 .background(Color.White),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(imageVector = icon, contentDescription = text, tint = Color.Gray, modifier = Modifier.size(30.dp))
-        }
+            contentScale = ContentScale.Crop
+        )
         Spacer(modifier = Modifier.height(8.dp))
-        Text(text = text, fontSize = 14.sp, textAlign = TextAlign.Center)
+        Text(text = text, fontSize = 14.sp, textAlign = TextAlign.Center, color = Color.White)
     }
 }
 
@@ -188,7 +194,7 @@ fun BottomNavigationBar(navController: NavController) {
             icon = { Icon(Icons.Default.Home, contentDescription = "Home") }
         )
         NavigationBarItem(
-            selected = true,
+            selected = false,
             onClick = { navController.navigate("carrito") },
             icon = {
                 BadgedBox(badge = { Badge { Text("1") } }) {

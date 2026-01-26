@@ -39,10 +39,15 @@ fun LoginScreen(navController: NavController, viewModel: UsuarioViewModel) {
 
     LaunchedEffect(mensaje) {
         if (mensaje == "Login exitoso") {
-            if (username == "admin") { // Hardcoded admin credentials
-                navController.navigate("usuario_backoffice")
+            if (username == "adminadmin" && password == "admin123") {
+                navController.navigate("usuario_backoffice") {
+                    popUpTo(0)
+                }
             } else {
-                // navController.navigate("catalogo") // Navigate to catalog for regular users
+                // Navigate to home for regular users
+                navController.navigate("home") {
+                    popUpTo(0)
+                }
             }
         }
     }
