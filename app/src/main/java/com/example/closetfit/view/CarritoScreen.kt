@@ -83,7 +83,7 @@ fun CarritoScreen(
                             val carritoActual = carritoViewmodel.carrito.value
 
                             if (carritoActual.isNullOrEmpty()) {
-                                navController.navigate("compraRechazada")
+                                navController.navigate("compra_rechazada")
                             } else {
                                 val total = carritoViewmodel.total.value
                                 val detalles = DetallePedido(
@@ -93,7 +93,7 @@ fun CarritoScreen(
                                     metodoPago = "Tarjeta"
                                 )
                                 compraExitosaViewModel.setDetallesPedido(detalles)
-                                navController.navigate("compraExitosa")
+                                navController.navigate("compra_exitosa")
                                 carritoViewmodel.vaciarCarrito()
                             }
                         },

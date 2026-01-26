@@ -2,6 +2,7 @@ package com.example.closetfit.view
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,9 +28,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import com.example.closetfit.ui.theme.colorBoton
+import com.example.closetfit.ui.theme.colorPrimario
+import com.example.closetfit.ui.theme.colorSecundario
 import com.example.closetfit.viewmodel.CompraExitosaViewModel
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.base.Defaults
 
@@ -66,23 +72,42 @@ fun CompraExitosaScreen(navController: NavController, viewModel: CompraExitosaVi
         }
     }
 
-    Scaffold { padding ->
+    Scaffold(
+        containerColor = colorSecundario,
+        contentColor = Color.White
+    ) { padding ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(padding),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Icon(
-                imageVector = Icons.Default.CheckCircle,
-                contentDescription = "Compra exitosa",
-                tint = Color(0xFF4CAF50),
-                modifier = Modifier.size(96.dp)
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.CheckCircle,
+                    contentDescription = null,
+                    tint = Color(0xFFD8D78F),
+                    modifier = Modifier
+                        .size(96.dp)
+                        .graphicsLayer {
+                            scaleX = 1.1f
+                            scaleY = 1.1f
+                        }
+                )
+            }
+            Text(
+                "¡Compra realizada con éxito!",
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text("¡Compra realizada con éxito!", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+
             Spacer(modifier = Modifier.height(8.dp))
-
-
-            Spacer(modifier = Modifier.weight(1f))
 
             detalles?.let {
                 Text("Número de pedido: ${it.idPedido}")
@@ -93,9 +118,23 @@ fun CompraExitosaScreen(navController: NavController, viewModel: CompraExitosaVi
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
-                Button(onClick = { viewModel.navegarAInicio() }) { Text("Salir de la aplicación") }
-                Button(onClick = { viewModel.navegarATienda() }) { Text("Seguir comprando") }
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceAround
+            ) {
+                Button(
+                    onClick = { viewModel.navegarAInicio() },
+                    colors = ButtonDefaults.buttonColors(containerColor = colorBoton)
+                ) {
+                    Text("Salir de la aplicación")
+                }
+
+                Button(
+                    onClick = { viewModel.navegarATienda() },
+                    colors = ButtonDefaults.buttonColors(containerColor = colorBoton)
+                ) {
+                    Text("Seguir comprando")
+                }
             }
         }
     }
