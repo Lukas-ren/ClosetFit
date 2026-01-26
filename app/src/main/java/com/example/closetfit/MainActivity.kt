@@ -9,17 +9,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.closetfit.ui.theme.ClosetFitTheme
-import com.example.closetfit.view.CargandoCompraScreen
 import com.example.closetfit.view.CarritoScreen
-import com.example.closetfit.view.CompraExitosaScreen
-import com.example.closetfit.view.CompraRechazadaScreen
+import com.example.closetfit.view.HomeScreen
 import com.example.closetfit.view.LoginScreen
+import com.example.closetfit.view.PerfilScreen
 import com.example.closetfit.view.RegistroScreen
 import com.example.closetfit.view.UsuarioBackoficceScreen
-import com.example.closetfit.viewmodel.CargandoCompraViewModel
-import com.example.closetfit.viewmodel.CarritoViewmodel
-import com.example.closetfit.viewmodel.CompraExitosaViewModel
-import com.example.closetfit.viewmodel.CompraRechazadaViewModel
 import com.example.closetfit.viewmodel.UsuarioViewModel
 
 class MainActivity : ComponentActivity() {
@@ -30,14 +25,19 @@ class MainActivity : ComponentActivity() {
             ClosetFitTheme {
                 val navController = rememberNavController()
                 val usuarioViewModel: UsuarioViewModel = viewModel()
-                val carritoViewmodel: CarritoViewmodel = viewModel()
-                val compraExitosaViewModel: CompraExitosaViewModel = viewModel()
-                val compraRechazadaViewModel: CompraRechazadaViewModel = viewModel()
-                val cargandoCompraViewmodel: CargandoCompraViewModel = viewModel()
                 NavHost(
                     navController = navController,
-                    startDestination = "carrito"
+                    startDestination = "home" 
                 ) {
+                    composable("home") { 
+                        HomeScreen(navController = navController)
+                    }
+                    composable("carrito") { 
+                        CarritoScreen(navController = navController)
+                    }
+                    composable("perfil") { 
+                        PerfilScreen(navController = navController)
+                    }
                     composable("registro") {
                         RegistroScreen(
                             navController = navController,
@@ -52,34 +52,6 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("usuario_backoffice") {
                         UsuarioBackoficceScreen(viewModel = usuarioViewModel)
-                    }
-                    composable("carrito") {
-                        CarritoScreen(
-                            navController = navController,
-                            carritoViewmodel = carritoViewmodel,
-                            compraExitosaViewModel = compraExitosaViewModel
-                        )
-                    }
-                    composable("compra_exitosa") {
-                        CompraExitosaScreen(
-                            navController = navController,
-                            viewModel = compraExitosaViewModel
-                        )
-                    }
-                    composable("compra_rechazada") {
-                        CompraRechazadaScreen(
-                            navController = navController,
-                            viewModel = compraRechazadaViewModel
-                        )
-                    }
-                    composable("cargando_compra") {
-                        CargandoCompraScreen(
-                            navController = navController,
-                            viewModel = cargandoCompraViewmodel,
-                            compraExitosaViewModel = compraExitosaViewModel,
-                            compraRechazadaViewModel = compraRechazadaViewModel,
-                            carritoViewmodel = carritoViewmodel
-                        )
                     }
                 }
             }

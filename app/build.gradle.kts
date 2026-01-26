@@ -58,20 +58,18 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation("androidx.compose.material:material-icons-extended-android:1.6.8") // Added this line
     implementation(libs.androidx.navigation.compose)
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
-    implementation("androidx.compose.material:material-icons-extended")
-
 
     // Room
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
     implementation(libs.androidx.compose.runtime.livedata)
-    implementation(libs.firebase.crashlytics.buildtools)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.compose.foundation.layout)
-    debugImplementation(libs.androidx.ui.tooling)
     kapt("androidx.room:room-compiler:2.6.1")
+
+    // Gson
+    implementation("com.google.code.gson:gson:2.10.1")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

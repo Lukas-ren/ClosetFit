@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -63,12 +64,14 @@ fun CarritoScreen(
         },
         bottomBar = {
             Surface(
+                modifier = Modifier.fillMaxWidth(),
                 color = colorSecundario,
                 tonalElevation = 8.dp
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .navigationBarsPadding()
                         .padding(16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
@@ -80,7 +83,22 @@ fun CarritoScreen(
 
                     Button(
                         onClick = {
-                            navController.navigate("cargando_compra")
+                            val carritoActual = carritoViewmodel.carrito.value
+
+                            if (carritoActual.isNullOrEmpty()) {
+                                navController.navigate("compraRechazada")
+                            } else {
+                                val total = carritoViewmodel.total.value
+                                val detalles = DetallePedido(
+                                    idPedido = "PED-${System.currentTimeMillis()}",
+                                    totalCompra = total,
+                                    numeroArticulos = carritoActual.sumOf { it.cantidad },
+                                    metodoPago = "Tarjeta"
+                                )
+                                compraExitosaViewModel.setDetallesPedido(detalles)
+                                navController.navigate("compraExitosa")
+                                carritoViewmodel.vaciarCarrito()
+                            }
                         },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = colorBoton
@@ -88,7 +106,6 @@ fun CarritoScreen(
                     ) {
                         Text("Finalizar compra")
                     }
-
                 }
             }
         }

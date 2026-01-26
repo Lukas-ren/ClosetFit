@@ -1,0 +1,43 @@
+
+[
+  {
+    "nombre": "Polera Básica Negra",
+    "categoria": "Poleras",
+    "talla": "M",
+    "precio": 15000,
+    "imagen": "polera_negra",
+    "stock": 50
+  },
+  {
+    "nombre": "Pantalón Jean Clásico",
+    "categoria": "Pantalones",
+    "talla": "42",
+    "precio": 30000,
+    "imagen": "pantalon_jean",
+    "stock": 30
+  },
+  {
+    "nombre": "Shorts Deportivos",
+    "categoria": "Shorts",
+    "talla": "L",
+    "precio": 12000,
+    "imagen": "shorts_deportivos",
+    "stock": 40
+  },
+  {
+    "nombre": "Polera Estampada Gris",
+    "categoria": "Poleras",
+    "talla": "L",
+    "precio": 18000,
+    "imagen": "polera_gris",
+    "stock": 25
+  },
+  {
+    "nombre": "Pantalón Cargo Beige",
+    "categoria": "Pantalones",
+    "talla": "44",
+    "precio": 35000,
+    "imagen": "pantalon_cargo",
+    "stock": 20
+  }
+]
