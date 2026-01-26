@@ -80,22 +80,7 @@ fun CarritoScreen(
 
                     Button(
                         onClick = {
-                            val carritoActual = carritoViewmodel.carrito.value
-
-                            if (carritoActual.isNullOrEmpty()) {
-                                navController.navigate("compra_rechazada")
-                            } else {
-                                val total = carritoViewmodel.total.value
-                                val detalles = DetallePedido(
-                                    idPedido = "PED-${System.currentTimeMillis()}",
-                                    totalCompra = total,
-                                    numeroArticulos = carritoActual.sumOf { it.cantidad },
-                                    metodoPago = "Tarjeta"
-                                )
-                                compraExitosaViewModel.setDetallesPedido(detalles)
-                                navController.navigate("compra_exitosa")
-                                carritoViewmodel.vaciarCarrito()
-                            }
+                            navController.navigate("cargando_compra")
                         },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = colorBoton
@@ -103,6 +88,7 @@ fun CarritoScreen(
                     ) {
                         Text("Finalizar compra")
                     }
+
                 }
             }
         }
