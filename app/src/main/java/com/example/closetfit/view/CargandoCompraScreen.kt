@@ -38,7 +38,7 @@ fun CargandoCompraScreen(
 ) {
     val estado by viewModel.estadoCompra.collectAsState()
 
-    val carritoVacio = carritoViewmodel.carrito.value.isEmpty()
+    val carritoVacio = carritoViewmodel.carrito.collectAsState().value.isEmpty()
 
     LaunchedEffect(Unit) {
         viewModel.procesarCompra(carritoVacio)
@@ -48,7 +48,7 @@ fun CargandoCompraScreen(
         when (estado) {
             is ResultadoCompra.Exitosa -> {
                 navController.navigate("compra_exitosa") {
-                    popUpTo("cargandoCompra") { inclusive = true }
+                    popUpTo("cargando_compra") { inclusive = true }
                 }
                 viewModel.limpiarEstado()
             }
@@ -58,7 +58,7 @@ fun CargandoCompraScreen(
                 compraRechazadaViewModel.setMotivo(motivo)
 
                 navController.navigate("compra_rechazada") {
-                    popUpTo("cargandoCompra") { inclusive = true }
+                    popUpTo("cargando_compra") { inclusive = true }
                 }
                 viewModel.limpiarEstado()
             }

@@ -47,7 +47,6 @@ fun HomeScreen(
     val productos by productoViewModel.allProductos.collectAsState(initial = emptyList())
 
     LaunchedEffect(Unit) {
-        // productoViewModel.cargarProductos(context) // This is not needed anymore
     }
     Scaffold(
         bottomBar = { BottomNavigationBar(navController) },
