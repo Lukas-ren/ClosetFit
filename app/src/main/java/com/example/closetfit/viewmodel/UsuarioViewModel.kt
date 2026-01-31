@@ -1,8 +1,10 @@
 package com.example.closetfit.viewmodel
 
 import android.app.Application
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.closetfit.interfaces.DAOUsuario
 import com.example.closetfit.model.Usuario
 import com.example.closetfit.repository.AppDatabase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,8 +13,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class UsuarioViewModel(app: Application) : AndroidViewModel(app) {
-    private val usuarioDAO = AppDatabase.getDatabase(app).usuarioDao()
-    val usuarios = usuarioDAO.obtenerUsuarios()
+
+    @set:VisibleForTesting
+    var usuarioDAO: DAOUsuario = AppDatabase.getDatabase(app).usuarioDao()
+
+    val usuarios by lazy { usuarioDAO.obtenerUsuarios() }
 
     private val _mensaje = MutableStateFlow("")
     val mensaje = _mensaje.asStateFlow()
