@@ -1,10 +1,9 @@
 package com.example.closetfit.repository
 
 import com.example.closetfit.model.Producto
-import com.example.closetfit.repository.RetrofitClient
 import retrofit2.Response
 
-class APIProductos {
+class ApiProducto {
 
     //Obtener todos los productos
     suspend fun obtenerProductos(): Response<List<Producto>> {

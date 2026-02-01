@@ -1,10 +1,10 @@
-package com.example.myapplication.repository
+package com.example.closetfit.repository
 
 import com.example.closetfit.model.Usuario
 import com.example.closetfit.repository.RetrofitClient
 import retrofit2.Response
 
-class APIUsuarios {
+class ApiUsuario {
 
     //Obtener todos los usuarios
     suspend fun obtenerUsuarios():Response<List<Usuario>> {
