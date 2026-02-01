@@ -1,17 +1,14 @@
 package com.example.closetfit.model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
 
-@Entity(tableName = "usuarios")
-data class Usuario (
-    @PrimaryKey(autoGenerate = true)
+data class Usuario(
     val id: Int = 0,
     val nombre: String,
-    val email: String,
-    val password: String,
-    val run: String?,
-    val direccion: String?
-) {
-    constructor(nombre: String, email: String, password: String) : this(0, nombre, email, password, null, null)
-}
+    val rol: String,
+    val correo: String,
+    @SerializedName("contraseña")
+    val contraseña: String,
+    val run: String,
+    val direccion: String
+)

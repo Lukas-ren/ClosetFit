@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.closetfit.interfaces.DAOUsuario
 import com.example.closetfit.model.Usuario
 import com.example.closetfit.repository.AppDatabase
 import kotlinx.coroutines.flow.MutableStateFlow

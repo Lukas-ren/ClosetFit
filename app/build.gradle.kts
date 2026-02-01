@@ -77,6 +77,17 @@ dependencies {
     // Coil
     implementation("io.coil-kt:coil-compose:2.6.0")
 
+    // ViewModel para Compose
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
+
+    // Lifecycle runtime
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.6")
+
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
     testImplementation(libs.junit)
     testImplementation(libs.kotest.runner)
     testImplementation(libs.kotest.assertions)

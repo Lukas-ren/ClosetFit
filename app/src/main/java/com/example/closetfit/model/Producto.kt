@@ -1,16 +1,15 @@
 package com.example.closetfit.model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
 
-@Entity
-data class Producto (
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0, // <--- CAMBIO AQUÍ
+data class Producto(
+    val id: Int = 0,
     val nombre: String,
     val categoria: String,
     val talla: String,
-    val precio: Int,
-    val imagen: String,
-    val stock: Int
+    val precio: Double,
+    @SerializedName("urlImagen")
+    val urlImagen: String,
+    val stock: Int,
+    val descripcion: String
 )

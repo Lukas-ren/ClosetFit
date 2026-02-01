@@ -1,7 +1,6 @@
 package com.example.closetfit.viewmodel
 
 import android.app.Application
-import com.example.closetfit.interfaces.DAOUsuario
 import com.example.closetfit.model.Usuario
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
