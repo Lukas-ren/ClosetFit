@@ -44,19 +44,20 @@ fun LoginScreen(navController: NavController, viewModel: ApiUsuarioViewModel) {
     LaunchedEffect(currentUser) {
         currentUser?.let { user ->
             if (mensaje == "Login exitoso") {
-                when (user.rol) {
-                    "ADMIN" -> {
-                        navController.navigate("usuario_backoffice") {
-                            popUpTo(0)
-                        }
-                    }
-                    "USER" -> {
-                        navController.navigate("home") {
-                            popUpTo(0)
-                        }
-                    }
+                val route = when (user.rol) {
+                    "ADMIN" -> "admin"
+                    "USER" -> "main"
+                    else -> null
                 }
-                viewModel.limpiarMensaje()
+
+                route?.let {
+                    navController.navigate(it) {
+                        popUpTo("auth") {
+                            inclusive = true
+                        }
+                    }
+                    viewModel.limpiarMensaje()
+                }
             }
         }
     }

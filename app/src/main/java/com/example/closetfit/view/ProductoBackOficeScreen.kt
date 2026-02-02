@@ -4,64 +4,75 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingBag
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.rememberNavController
-import com.example.closetfit.model.Usuario
+import coil.compose.AsyncImage
+import com.example.closetfit.R
+import com.example.closetfit.model.Producto
 import com.example.closetfit.ui.theme.colorPrimario
 import com.example.closetfit.ui.theme.colorSecundario
-import com.example.closetfit.viewmodel.ApiUsuarioViewModel
+import com.example.closetfit.viewmodel.ApiProductoViewModel
 
 // Stateful Composable
 @Composable
-fun UsuarioBackoficceScreen(navController: NavController, viewModel: ApiUsuarioViewModel) {
-    val usuarios by viewModel.usuarios.collectAsState()
+fun ProductoBackOfficeScreen(
+    navController: NavController,
+    viewModel: ApiProductoViewModel
+) {
+    val productos by viewModel.allProductos.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val mensaje by viewModel.mensaje.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.cargarUsuarios()
+        viewModel.cargarProductos()
     }
 
-    UsuarioBackoficceScreenContent(
+    ProductoBackOfficeScreenContent(
         navController = navController,
-        usuarios = usuarios,
+        productos = productos,
         isLoading = isLoading,
         mensaje = mensaje,
-        onRecargar = { viewModel.cargarUsuarios() },
-        onEliminarUsuario = { id -> viewModel.deleteUser(id) }
+        onRecargar = { viewModel.cargarProductos() },
+        onEliminarProducto = { id -> viewModel.eliminarProducto(id) }
     )
 }
 
-// Stateless Composable (for UI and Previews)
+// Stateless Composable
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UsuarioBackoficceScreenContent(
+fun ProductoBackOfficeScreenContent(
     navController: NavController,
-    usuarios: List<Usuario>,
+    productos: List<Producto>,
     isLoading: Boolean = false,
     mensaje: String = "",
     onRecargar: () -> Unit = {},
-    onEliminarUsuario: (Int) -> Unit = {}
+    onEliminarProducto: (Int) -> Unit = {}
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
 
@@ -85,7 +96,7 @@ fun UsuarioBackoficceScreenContent(
                             onDismissRequest = { menuExpanded = false }
                         ) {
                             DropdownMenuItem(
-                                text = { Text("Recargar usuarios") },
+                                text = { Text("Recargar productos") },
                                 onClick = {
                                     onRecargar()
                                     menuExpanded = false
@@ -101,10 +112,8 @@ fun UsuarioBackoficceScreenContent(
                             DropdownMenuItem(
                                 text = { Text("Cerrar sesión") },
                                 onClick = {
-                                    navController.navigate("auth") {
-                                        popUpTo(navController.graph.id) {
-                                            inclusive = true
-                                        }
+                                    navController.navigate("login") {
+                                        popUpTo(0)
                                     }
                                     menuExpanded = false
                                 }
@@ -117,8 +126,16 @@ fun UsuarioBackoficceScreenContent(
         bottomBar = {
             NavigationBar(containerColor = colorSecundario, contentColor = Color.White) {
                 NavigationBarItem(
-                    selected = true,
-                    onClick = { /* Ya estás aquí */ },
+                    selected = false,
+                    onClick = {
+                        navController.navigate("usuario_backoffice") {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
                     icon = {
                         Icon(
                             Icons.Default.Person,
@@ -129,16 +146,8 @@ fun UsuarioBackoficceScreenContent(
                     label = { Text("Usuarios", color = Color.White, fontSize = 11.sp) }
                 )
                 NavigationBarItem(
-                    selected = false,
-                    onClick = {
-                        navController.navigate("producto_backoffice") {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    },
+                    selected = true,
+                    onClick = { /* Ya estás aquí */ },
                     icon = {
                         Icon(
                             Icons.Default.ShoppingBag,
@@ -163,7 +172,7 @@ fun UsuarioBackoficceScreenContent(
                         color = colorSecundario
                     )
                 }
-                mensaje.isNotEmpty() && usuarios.isEmpty() -> {
+                mensaje.isNotEmpty() && productos.isEmpty() -> {
                     Column(
                         modifier = Modifier.align(Alignment.Center),
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -179,9 +188,9 @@ fun UsuarioBackoficceScreenContent(
                         }
                     }
                 }
-                usuarios.isEmpty() -> {
+                productos.isEmpty() -> {
                     Text(
-                        text = "No hay usuarios registrados",
+                        text = "No hay productos registrados",
                         modifier = Modifier.align(Alignment.Center),
                         color = Color.Gray
                     )
@@ -194,10 +203,10 @@ fun UsuarioBackoficceScreenContent(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        items(usuarios) { usuario ->
-                            UserItem(
-                                usuario = usuario,
-                                onEliminar = { onEliminarUsuario(usuario.id) }
+                        items(productos) { producto ->
+                            ProductoItem(
+                                producto = producto,
+                                onEliminar = { onEliminarProducto(producto.id) }
                             )
                         }
                     }
@@ -208,7 +217,7 @@ fun UsuarioBackoficceScreenContent(
 }
 
 @Composable
-fun UserItem(usuario: Usuario, onEliminar: () -> Unit = {}) {
+fun ProductoItem(producto: Producto, onEliminar: () -> Unit = {}) {
     var showDialog by remember { mutableStateOf(false) }
 
     Card(
@@ -219,34 +228,91 @@ fun UserItem(usuario: Usuario, onEliminar: () -> Unit = {}) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.Top
             ) {
-                Text(
-                    text = "ID: ${usuario.id}",
-                    color = Color.Gray,
-                    style = MaterialTheme.typography.bodySmall
+                // Imagen del producto
+                AsyncImage(
+                    model = producto.urlImagen,
+                    contentDescription = producto.nombre,
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop,
+                    error = painterResource(id = R.drawable.ic_launcher_background),
+                    placeholder = painterResource(id = R.drawable.ic_launcher_background)
                 )
-                Badge(
-                    containerColor = if (usuario.rol == "ADMIN") Color.Red else Color.Blue
+
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 16.dp)
                 ) {
-                    Text(text = usuario.rol, color = Color.White)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "ID: ${producto.id}",
+                            color = Color.Gray,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                        Badge(
+                            containerColor = when (producto.categoria.lowercase()) {
+                                "polera" -> Color(0xFF4CAF50)
+                                "jeans" -> Color(0xFF2196F3)
+                                "short" -> Color(0xFFFF9800)
+                                else -> Color.Gray
+                            }
+                        ) {
+                            Text(
+                                text = producto.categoria.uppercase(),
+                                color = Color.White,
+                                fontSize = 10.sp
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = producto.nombre,
+                        color = Color.White,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Text(
+                        text = "Talla: ${producto.talla}",
+                        color = Color.White,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+
+                    Text(
+                        text = "Precio: $${"%.0f".format(producto.precio)}",
+                        color = Color(0xFFD8D78F),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Text(
+                        text = "Stock: ${producto.stock}",
+                        color = if (producto.stock > 0) Color.Green else Color.Red,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
-            Text(text = "Nombre: ${usuario.nombre}", color = Color.Black, style = MaterialTheme.typography.bodyLarge)
-            Text(text = "Correo: ${usuario.correo}", color = Color.Black)
-            Text(text = "Run: ${usuario.run}", color = Color.Black)
-            Text(text = "Dirección: ${usuario.direccion}", color = Color.Black)
 
-            if (usuario.rol != "ADMIN") {
-                Button(
-                    onClick = { showDialog = true },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
-                ) {
-                    Text("Eliminar usuario", color = Color.White)
-                }
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Button(
+                onClick = { showDialog = true },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+            ) {
+                Text("Eliminar producto", color = Color.White)
             }
         }
     }
@@ -255,7 +321,7 @@ fun UserItem(usuario: Usuario, onEliminar: () -> Unit = {}) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
             title = { Text("Confirmar eliminación") },
-            text = { Text("¿Estás seguro de que deseas eliminar a ${usuario.nombre}?") },
+            text = { Text("¿Estás seguro de que deseas eliminar ${producto.nombre}?") },
             confirmButton = {
                 Button(
                     onClick = {
@@ -278,45 +344,58 @@ fun UserItem(usuario: Usuario, onEliminar: () -> Unit = {}) {
 
 @Preview(showBackground = true)
 @Composable
-fun UsuarioBackoficceScreenPreview() {
-    val listaFalsaUser = listOf(
-        Usuario(
+fun ProductoBackOfficeScreenPreview() {
+    val listaFalsaProductos = listOf(
+        Producto(
             id = 1,
-            nombre = "Admin",
-            rol = "ADMIN",
-            correo = "admin@admin.com",
-            contraseña = "admin",
-            run = "11.111.111-1",
-            direccion = "Dirección 123"
+            nombre = "Polera Básica Blanca",
+            categoria = "polera",
+            talla = "M",
+            precio = 15990.0,
+            urlImagen = "https://example.com/polera.jpg",
+            stock = 50,
+            descripcion = "Polera básica de algodón 100%"
         ),
-        Usuario(
+        Producto(
             id = 2,
-            nombre = "TestUser",
-            rol = "USER",
-            correo = "test@user.com",
-            contraseña = "123",
-            run = "22.222.222-2",
-            direccion = "Avenida 456"
+            nombre = "Jeans Skinny Negro",
+            categoria = "jeans",
+            talla = "32",
+            precio = 39990.0,
+            urlImagen = "https://example.com/jeans.jpg",
+            stock = 35,
+            descripcion = "Jeans ajustados de corte moderno"
+        ),
+        Producto(
+            id = 3,
+            nombre = "Short Deportivo",
+            categoria = "short",
+            talla = "L",
+            precio = 22990.0,
+            urlImagen = "https://example.com/short.jpg",
+            stock = 0,
+            descripcion = "Short ideal para deporte"
         )
     )
-    UsuarioBackoficceScreenContent(
+    ProductoBackOfficeScreenContent(
         navController = rememberNavController(),
-        usuarios = listaFalsaUser
+        productos = listaFalsaProductos
     )
 }
 
 @Preview(showBackground = true)
 @Composable
-fun UserItemPreview() {
-    UserItem(
-        usuario = Usuario(
+fun ProductoItemPreview() {
+    ProductoItem(
+        producto = Producto(
             id = 1,
-            nombre = "Admin",
-            rol = "ADMIN",
-            correo = "admin@admin.com",
-            contraseña = "admin",
-            run = "11.111.111-1",
-            direccion = "Dirección 123"
+            nombre = "Polera Básica Blanca",
+            categoria = "polera",
+            talla = "M",
+            precio = 15990.0,
+            urlImagen = "https://example.com/polera.jpg",
+            stock = 50,
+            descripcion = "Polera básica de algodón 100%"
         )
     )
 }

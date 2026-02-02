@@ -26,19 +26,19 @@ import com.example.closetfit.viewmodel.CompraExitosaViewModel
 import com.example.closetfit.viewmodel.CompraRechazadaViewModel
 import com.example.closetfit.model.ResultadoCompra
 import com.example.closetfit.ui.theme.colorSecundario
-import com.example.closetfit.viewmodel.CarritoViewmodel
+import com.example.closetfit.viewmodel.CarritoViewModel
 
 @Composable
 fun CargandoCompraScreen(
     navController: NavController,
     viewModel: CargandoCompraViewModel = viewModel(),
-    carritoViewmodel: CarritoViewmodel,
+    carritoViewModel: CarritoViewModel,
     compraExitosaViewModel: CompraExitosaViewModel = viewModel(),
     compraRechazadaViewModel: CompraRechazadaViewModel = viewModel()
 ) {
     val estado by viewModel.estadoCompra.collectAsState()
 
-    val carritoVacio = carritoViewmodel.carrito.collectAsState().value.isEmpty()
+    val carritoVacio = carritoViewModel.carrito.collectAsState().value.isEmpty()
 
     LaunchedEffect(Unit) {
         viewModel.procesarCompra(carritoVacio)

@@ -1,12 +1,15 @@
 package com.example.closetfit.model
 
-data class Carrito (
-    val id : Int,
+data class ItemCarrito(
+    val id: Int,
     val nombre: String,
-    val precio: Int,
-    var cantidad: Int = 1,
-    val imagen: String = ""
+    val categoria: String,
+    val talla: String,
+    val precio: Double,
+    val urlImagen: String,
+    val cantidad: Int,
+    val stockDisponible: Int
 ) {
-    val subtotal: Int
+    val subtotal: Double
         get() = precio * cantidad
 }

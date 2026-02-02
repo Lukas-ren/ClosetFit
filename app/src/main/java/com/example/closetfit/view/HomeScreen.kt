@@ -40,12 +40,12 @@ import com.example.closetfit.viewmodel.ApiUsuarioViewModel
 fun HomeScreen(
     navController: NavController,
     homeViewModel: HomeViewModel,
-    usuarioViewModel: ApiUsuarioViewModel
+    apiUsuarioViewModel: ApiUsuarioViewModel
 ) {
     val productos by homeViewModel.productos.collectAsState()
     val isLoading by homeViewModel.loading.collectAsState()
     val mensaje by homeViewModel.mensaje.collectAsState()
-    val currentUser by usuarioViewModel.currentUser.collectAsState()
+    val currentUser by apiUsuarioViewModel.currentUser.collectAsState()
 
     var searchQuery by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf("Todos") }
@@ -87,7 +87,8 @@ fun HomeScreen(
                         navController = navController,
                         searchQuery = searchQuery,
                         onSearchChange = { searchQuery = it },
-                        userName = currentUser?.nombre ?: "Usuario"
+                        userName = currentUser?.nombre ?: "Usuario",
+                        userRole = currentUser?.rol ?: "USER"
                     )
                 }
 
@@ -155,8 +156,7 @@ fun HomeScreen(
                             ProductoCard(
                                 producto = producto,
                                 onClick = {
-                                    // TODO: Navegar a detalle del producto
-                                    // navController.navigate("producto_detalle/${producto.id}")
+                                    navController.navigate("producto_detalle/${producto.id}")
                                 }
                             )
                         }
@@ -175,7 +175,8 @@ fun TopSection(
     navController: NavController,
     searchQuery: String,
     onSearchChange: (String) -> Unit,
-    userName: String
+    userName: String,
+    userRole: String = "USER"
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -183,20 +184,55 @@ fun TopSection(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = "Hola, $userName",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
-
-            IconButton(onClick = { navController.navigate("perfil") }) {
-                Icon(
-                    Icons.Default.Person,
-                    contentDescription = "Perfil",
-                    tint = Color.White,
-                    modifier = Modifier.size(32.dp)
+            Column {
+                Text(
+                    text = "Hola, $userName",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
                 )
+                if (userRole == "ADMIN") {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Badge(
+                        containerColor = Color.Red,
+                        modifier = Modifier.padding(start = 0.dp)
+                    ) {
+                        Text(
+                            text = "ADMINISTRADOR",
+                            color = Color.White,
+                            fontSize = 10.sp,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                        )
+                    }
+                }
+            }
+
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                // Botón de backoffice solo para ADMIN
+                if (userRole == "ADMIN") {
+                    IconButton(
+                        onClick = { navController.navigate("usuario_backoffice") },
+                        colors = IconButtonDefaults.iconButtonColors(
+                            containerColor = Color.Red.copy(alpha = 0.2f)
+                        )
+                    ) {
+                        Icon(
+                            Icons.Default.Settings,
+                            contentDescription = "Panel de Administración",
+                            tint = Color.Red,
+                            modifier = Modifier.size(28.dp)
+                        )
+                    }
+                }
+
+                IconButton(onClick = { navController.navigate("perfil") }) {
+                    Icon(
+                        Icons.Default.Person,
+                        contentDescription = "Perfil",
+                        tint = Color.White,
+                        modifier = Modifier.size(32.dp)
+                    )
+                }
             }
         }
 
@@ -421,8 +457,7 @@ fun BottomNavigationBar(navController: NavController) {
         NavigationBarItem(
             selected = false,
             onClick = {
-                // TODO: Implementar carrito
-                // navController.navigate("carrito")
+                navController.navigate("carrito")
             },
             icon = {
                 BadgedBox(
@@ -436,37 +471,14 @@ fun BottomNavigationBar(navController: NavController) {
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
-@Composable
-fun HomeScreenPreview() {
-    ClosetFitTheme {
-        HomeScreenContent(
-            productos = listOf(
-                Producto(
-                    id = 1,
-                    nombre = "Polera Básica Blanca",
-                    categoria = "polera",
-                    talla = "M",
-                    precio = 15990.0,
-                    urlImagen = "https://example.com/polera.jpg",
-                    stock = 50,
-                    descripcion = "Polera básica de algodón 100%"
-                )
-            ),
-            isLoading = false,
-            mensaje = "",
-            userName = "Usuario"
-        )
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenContent(
     productos: List<Producto>,
     isLoading: Boolean,
     mensaje: String,
-    userName: String
+    userName: String,
+    userRole: String = "USER"
 ) {
     val navController = rememberNavController()
     Scaffold(
@@ -486,12 +498,18 @@ fun HomeScreenContent(
                     navController = navController,
                     searchQuery = "",
                     onSearchChange = {},
-                    userName = userName
+                    userName = userName,
+                    userRole = userRole
                 )
             }
             item { CategoriesSection() }
             items(productos) { producto ->
-                ProductoCard(producto = producto, onClick = {})
+                ProductoCard(
+                    producto = producto,
+                    onClick = {
+                        //navController.navigate("producto_detalle/${producto.id}")
+                    }
+                )
             }
         }
     }
